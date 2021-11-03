@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -18,7 +19,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class CommentDeleteDto {
 
     @ApiModelProperty(value = "댓글 PK", example = "1")
-    @NotBlank(message = "댓글 PK는 필수입니다.")
+    @NotNull(message = "댓글 PK는 필수입니다.")
     private Long id;
 
     @ApiModelProperty(value = "작성자 이름", example = "만두", required = true)
