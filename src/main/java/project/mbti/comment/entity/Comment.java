@@ -11,6 +11,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.FetchType.LAZY;
@@ -52,8 +53,8 @@ public class Comment {
     private String content;
 
     @Builder
-    public Comment(Comment parent, MBTI mbti, String name, String password, String content) {
-        this.parent = (parent == null ? this : parent);
+    public Comment(Optional<Comment> parent, MBTI mbti, String name, String password, String content) {
+        this.parent = (parent.isEmpty() ? this : parent.get());
         this.mbti = mbti;
         this.name = name;
         this.password = password;
@@ -61,7 +62,7 @@ public class Comment {
         this.state = WRITTEN;
     }
 
-    public CommentDto convert(){
+    public CommentDto convert() {
         return CommentDto.builder()
                 .id(getId())
                 .parentId(getParent().getId())

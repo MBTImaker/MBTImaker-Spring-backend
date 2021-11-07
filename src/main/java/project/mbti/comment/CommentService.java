@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import project.mbti.comment.dto.CommentDto;
+import project.mbti.comment.dto.ReplytDto;
 import project.mbti.comment.entity.Comment;
 import project.mbti.comment.entity.MBTI;
 import project.mbti.exception.CommentNameNotMatchException;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 @Service
@@ -71,13 +73,13 @@ public class CommentService {
     }
 
     @Transactional
-    public Comment create(MBTI mbti, String name, String password, String content, Comment parent) {
+    public Comment create(MBTI mbti, String name, String password, String content, Long parentId) {
         final Comment comment = Comment.builder()
                 .mbti(mbti)
                 .name(name)
                 .password(password)
                 .content(filterText(content))
-                .parent(parent)
+                .parent(commentRepository.findById(parentId))
                 .build();
 
         return commentRepository.save(comment);
@@ -100,10 +102,16 @@ public class CommentService {
             throw new CommentPasswordNotMatchException();
     }
 
-    public Page<CommentDto> getCommentPage(int page, MBTI mbti) {
+    public Page<CommentDto> getCommentPage(int page, int size, MBTI mbti) {
         page = (page == 0 ? 0 : page - 1);
-        Pageable pageable = PageRequest.of(page, 5, Sort.by(DESC, "id"));
+        Pageable pageable = PageRequest.of(page, size, Sort.by(DESC, "id"));
         return commentRepository.findCommentDtoPage(pageable, mbti);
+    }
+
+    public Page<ReplytDto> getReplyPage(Long parentId, int page, int size, MBTI mbti) {
+        page = (page == 0 ? 0 : page - 1);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(ASC, "id"));
+        return commentRepository.findReplyDtoPage(parentId, pageable, mbti);
     }
 
     public Optional<Comment> findById(Long id) {

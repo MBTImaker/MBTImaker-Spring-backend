@@ -9,9 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import project.mbti.comment.dto.CommentDeleteDto;
-import project.mbti.comment.dto.CommentDto;
-import project.mbti.comment.dto.CommentWriteDto;
+import project.mbti.comment.dto.*;
 import project.mbti.comment.entity.MBTI;
 import project.mbti.response.result.ResultResponse;
 import project.mbti.comment.entity.Comment;
@@ -30,7 +28,17 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성")
     @PostMapping("/comment")
     public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto) {
-        final Comment comment = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), null);
+        final Comment comment = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L);
+        final CommentDto commentDto = comment.convert();
+
+        return ResponseEntity.ok()
+                .body(ResultResponse.of(WRITE_SUCCESS, commentDto));
+    }
+
+    @ApiOperation(value = "대댓글 작성")
+    @PostMapping("/reply")
+    public ResponseEntity<ResultResponse> reply(@Validated @RequestBody ReplyWriteDto dto) {
+        final Comment comment = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), dto.getParentId());
         final CommentDto commentDto = comment.convert();
 
         return ResponseEntity.ok()
@@ -49,14 +57,35 @@ public class CommentController {
     @ApiOperation(value = "댓글 페이징 조회")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "페이지", example = "1", required = true),
-            @ApiImplicitParam(name = "mbti", value = "MBTI", example = "ISTJ", required = true)
+            @ApiImplicitParam(name = "mbti", value = "MBTI", example = "ISTJ", required = true),
+            @ApiImplicitParam(name = "size", value = "댓글 개수", example = "5", required = true)
     })
     @GetMapping("/comment")
     public ResponseEntity<ResultResponse> commentList(@Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
+                                                      @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size,
                                                       @Validated @NotNull(message = "MBTI 유형은 필수입니다.") @RequestParam MBTI mbti) {
-        final Page<CommentDto> commentPage = commentService.getCommentPage(page, mbti);
+        final Page<CommentDto> commentPage = commentService.getCommentPage(page, size, mbti);
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(FIND_COMMENT_PAGE_SUCCESS, commentPage));
+    }
+
+    @ApiOperation(value = "대댓글 페이징 조회")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "페이지", example = "1", required = true),
+            @ApiImplicitParam(name = "mbti", value = "MBTI", example = "ISTJ", required = true),
+            @ApiImplicitParam(name = "size", value = "대댓글 개수", example = "5", required = true),
+            @ApiImplicitParam(name = "parentId", value = "부모 댓글 PK", example = "1", required = true)
+    })
+    @GetMapping("/reply")
+    public ResponseEntity<ResultResponse> replyList(
+            @Validated @NotNull(message = "부모 댓글 PK는 필수입니다.") @RequestParam Long parentId,
+            @Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
+            @Validated @NotNull(message = "대댓글 개수를 입력해주세요.") @RequestParam int size,
+            @Validated @NotNull(message = "MBTI 유형은 필수입니다.") @RequestParam MBTI mbti) {
+        final Page<ReplytDto> replyPage = commentService.getReplyPage(parentId, page, size, mbti);
+
+        return ResponseEntity.ok()
+                .body(ResultResponse.of(FIND_REPLY_PAGE_SUCCESS, replyPage));
     }
 }

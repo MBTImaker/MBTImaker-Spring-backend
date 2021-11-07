@@ -11,6 +11,7 @@ public enum ResultCode {
     WRITE_SUCCESS(200,"C100", "댓글 작성 성공"),
     DELETE_SUCCESS(200,"C101", "댓글 삭제 성공"),
     FIND_COMMENT_PAGE_SUCCESS(200,"C102", "댓글 페이징 조회 성공"),
+    FIND_REPLY_PAGE_SUCCESS(200,"C103", "대댓글 페이징 조회 성공"),
 
     ;
 
