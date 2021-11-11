@@ -17,6 +17,9 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(400, "C001", "존재하지 않는 댓글입니다."),
     COMMENT_NAME_NOT_MATCH(400, "C002", "댓글 작성자 이름이 일치하지 않습니다."),
     COMMENT_PASSWORD_NOT_MATCH(400, "C003", "댓글 비밀번호가 일치하지 않습니다."),
+
+    // MBTI
+    MBTI_NOT_FOUND(400, "M001", "올바르지 않은 MBTI 유형입니다."),
     ;
 
     private int status;

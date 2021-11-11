@@ -118,7 +118,7 @@ class CommentServiceTest {
         final Comment comment3 = commentService.create(mbti, name, password, content, null);
 
         // when
-        final Page<CommentDto> commentPage = commentService.getCommentPage(0, 5, mbti);
+        final Page<CommentDto> commentPage = commentService.getCommentPage(0, 5);
 
         // then
         assertThat(commentPage.getTotalElements()).isEqualTo(3);

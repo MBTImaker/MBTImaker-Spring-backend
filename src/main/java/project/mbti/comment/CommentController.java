@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.mbti.comment.dto.*;
-import project.mbti.comment.entity.MBTI;
 import project.mbti.response.result.ResultResponse;
 import project.mbti.comment.entity.Comment;
 
@@ -57,14 +56,12 @@ public class CommentController {
     @ApiOperation(value = "댓글 페이징 조회")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "페이지", example = "1", required = true),
-            @ApiImplicitParam(name = "mbti", value = "MBTI", example = "ISTJ", required = true),
             @ApiImplicitParam(name = "size", value = "댓글 개수", example = "5", required = true)
     })
     @GetMapping("/comment")
     public ResponseEntity<ResultResponse> commentList(@Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
-                                                      @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size,
-                                                      @Validated @NotNull(message = "MBTI 유형은 필수입니다.") @RequestParam MBTI mbti) {
-        final Page<CommentDto> commentPage = commentService.getCommentPage(page, size, mbti);
+                                                      @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size) {
+        final Page<CommentDto> commentPage = commentService.getCommentPage(page, size);
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(FIND_COMMENT_PAGE_SUCCESS, commentPage));
@@ -73,7 +70,6 @@ public class CommentController {
     @ApiOperation(value = "대댓글 페이징 조회")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "페이지", example = "1", required = true),
-            @ApiImplicitParam(name = "mbti", value = "MBTI", example = "ISTJ", required = true),
             @ApiImplicitParam(name = "size", value = "대댓글 개수", example = "5", required = true),
             @ApiImplicitParam(name = "parentId", value = "부모 댓글 PK", example = "1", required = true)
     })
@@ -81,9 +77,8 @@ public class CommentController {
     public ResponseEntity<ResultResponse> replyList(
             @Validated @NotNull(message = "부모 댓글 PK는 필수입니다.") @RequestParam Long parentId,
             @Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
-            @Validated @NotNull(message = "대댓글 개수를 입력해주세요.") @RequestParam int size,
-            @Validated @NotNull(message = "MBTI 유형은 필수입니다.") @RequestParam MBTI mbti) {
-        final Page<ReplytDto> replyPage = commentService.getReplyPage(parentId, page, size, mbti);
+            @Validated @NotNull(message = "대댓글 개수를 입력해주세요.") @RequestParam int size) {
+        final Page<ReplytDto> replyPage = commentService.getReplyPage(parentId, page, size);
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(FIND_REPLY_PAGE_SUCCESS, replyPage));

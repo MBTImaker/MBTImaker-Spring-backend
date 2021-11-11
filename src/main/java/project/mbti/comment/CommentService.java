@@ -14,6 +14,7 @@ import project.mbti.comment.entity.MBTI;
 import project.mbti.exception.CommentNameNotMatchException;
 import project.mbti.exception.CommentNotFoundException;
 import project.mbti.exception.CommentPasswordNotMatchException;
+import project.mbti.exception.MbtiNotFoundException;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -74,6 +75,9 @@ public class CommentService {
 
     @Transactional
     public Comment create(MBTI mbti, String name, String password, String content, Long parentId) {
+        if (mbti.equals(MBTI.NOT_FOUND))
+            throw new MbtiNotFoundException();
+
         final Comment comment = Comment.builder()
                 .mbti(mbti)
                 .name(name)
@@ -102,16 +106,16 @@ public class CommentService {
             throw new CommentPasswordNotMatchException();
     }
 
-    public Page<CommentDto> getCommentPage(int page, int size, MBTI mbti) {
+    public Page<CommentDto> getCommentPage(int page, int size) {
         page = (page == 0 ? 0 : page - 1);
         Pageable pageable = PageRequest.of(page, size, Sort.by(DESC, "id"));
-        return commentRepository.findCommentDtoPage(pageable, mbti);
+        return commentRepository.findCommentDtoPage(pageable);
     }
 
-    public Page<ReplytDto> getReplyPage(Long parentId, int page, int size, MBTI mbti) {
+    public Page<ReplytDto> getReplyPage(Long parentId, int page, int size) {
         page = (page == 0 ? 0 : page - 1);
         Pageable pageable = PageRequest.of(page, size, Sort.by(ASC, "id"));
-        return commentRepository.findReplyDtoPage(parentId, pageable, mbti);
+        return commentRepository.findReplyDtoPage(parentId, pageable);
     }
 
     public Optional<Comment> findById(Long id) {
