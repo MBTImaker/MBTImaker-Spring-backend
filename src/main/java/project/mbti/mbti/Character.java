@@ -9,8 +9,8 @@ import java.util.List;
 @AllArgsConstructor
 public class Character {
 
-    private String movieName;
-    private String name;
+    private Image movieName;
+    private Image name;
     private Image image;
     private String representativePersonality;
     private List<String> personalities;
