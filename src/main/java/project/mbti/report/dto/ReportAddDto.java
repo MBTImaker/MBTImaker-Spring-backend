@@ -3,24 +3,23 @@ package project.mbti.report.dto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import javax.validation.constraints.NotNull;
+
+import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import project.mbti.report.entity.ReportType;
 
 @ApiModel(description = "신고 요청 데이터")
 @Data
-@Builder
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReportAddDto {
 
     @ApiModelProperty(value = "댓글 ID", example = "1", required = true)
-    @NotBlank(message = "댓글 ID는 필수입니다.")
+    @NotNull(message = "댓글 ID는 필수입니다.")
     private Long commentId;
 
     @ApiModelProperty(value = "신고 유형", required = true)
-    @NotBlank(message = "신고 유형을 선택해주세요.")
+    @NotNull(message = "신고 유형을 선택해주세요.")
     private ReportType type;
 
     @ApiModelProperty(value = "신고 이유", example = "너무 심한 욕설이에요!")

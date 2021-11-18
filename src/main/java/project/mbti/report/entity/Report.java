@@ -27,7 +27,7 @@ import project.mbti.report.dto.ReportDto;
 @Entity
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "REPORT")
+@Table(name = "reports")
 @EntityListeners(AuditingEntityListener.class)
 public class Report {
 
