@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 import project.mbti.comment.dto.CommentDto;
 import project.mbti.comment.entity.Comment;
-import project.mbti.comment.entity.MBTI;
+import project.mbti.MBTI;
 import project.mbti.exception.CommentNameNotMatchException;
 import project.mbti.exception.CommentNotFoundException;
 import project.mbti.exception.CommentPasswordNotMatchException;

@@ -1,4 +1,4 @@
-package project.mbti.comment.entity;
+package project.mbti;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 
@@ -6,7 +6,7 @@ public enum MBTI {
     ISTJ, ISFJ, INFJ, INTJ,
     ISTP, ISFP, INFP, INTP,
     ESTP, ESFP, ENFP, ENTP,
-    ESTJ, ESJF, ENFJ, ENTJ,
+    ESTJ, ESFJ, ENFJ, ENTJ,
     NOT_FOUND;
 
     @JsonCreator

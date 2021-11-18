@@ -8,13 +8,13 @@ import org.springframework.data.repository.query.Param;
 import project.mbti.comment.dto.CommentDto;
 import project.mbti.comment.dto.ReplytDto;
 import project.mbti.comment.entity.Comment;
-import project.mbti.comment.entity.MBTI;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("select new project.mbti.comment.dto." +
-            "CommentDto(c.id, c.parent.id, c.createdDate, c.mbti, c.name, c.password, c.content, c.children.size) " +
-            "from Comment c")
+            "CommentDto(c.id, c.parent.id, c.createdDate, c.mbti, c.name, c.password, c.content, c.children.size - 1) " +
+            "from Comment c " +
+            "where c.id = c.parent.id")
     Page<CommentDto> findCommentDtoPage(Pageable pageable);
 
     @Query("select new project.mbti.comment.dto." +

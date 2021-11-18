@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import project.mbti.comment.entity.MBTI;
+import project.mbti.MBTI;
 
 import java.time.LocalDateTime;
 
