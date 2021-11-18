@@ -9,7 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class TestResult {
 
-    // TODO: MBTI별 나와 같은 유형 + 가장 많은 유형 데이터 추가
     private Character character;
     private Chemistry bestChemistry;
     private Chemistry worstChemistry;
