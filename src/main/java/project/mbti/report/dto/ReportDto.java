@@ -28,9 +28,6 @@ public class ReportDto {
     @ApiModelProperty(value = "신고 구체적인 이유", example = "정말 욕설이 심하네요!")
     private String description;
 
-    @ApiModelProperty(value = "신고 누적 횟수", example = "1")
-    private int count;
-
     @ApiModelProperty(value = "신고 날짜", example = "2021-11-08 10:23:31")
     private LocalDateTime createdDate;
 
