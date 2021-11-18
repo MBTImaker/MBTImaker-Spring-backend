@@ -13,6 +13,10 @@ public enum ResultCode {
     FIND_COMMENT_PAGE_SUCCESS(200,"C102", "댓글 페이징 조회 성공"),
     FIND_REPLY_PAGE_SUCCESS(200,"C103", "대댓글 페이징 조회 성공"),
 
+
+    // TEST
+    GET_TEST_COUNT_SUCCESS(200, "T001", "테스트 참여 횟수 조회 성공"),
+    ANALYSIS_TEST_SUCCESS(200, "T002", "테스트 분석 성공"),
     ;
 
     private int status;
