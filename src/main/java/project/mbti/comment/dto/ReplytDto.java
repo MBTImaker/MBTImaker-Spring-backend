@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import project.mbti.MBTI;
 
 import java.time.LocalDateTime;
 
@@ -26,6 +27,9 @@ public class ReplytDto {
 
     @ApiModelProperty(value = "대댓글 생성 일자", example = "2021-10-30 08:31:01")
     private LocalDateTime createdDate;
+
+    @ApiModelProperty(value = "MBTI", example = "ISTJ")
+    private MBTI mbti;
 
     @ApiModelProperty(value = "대댓글 작성자 이름", example = "만두")
     private String name;

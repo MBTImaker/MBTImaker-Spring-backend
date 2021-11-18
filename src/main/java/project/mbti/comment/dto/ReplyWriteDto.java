@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import project.mbti.comment.entity.MBTI;
+import project.mbti.MBTI;
 
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotBlank;
