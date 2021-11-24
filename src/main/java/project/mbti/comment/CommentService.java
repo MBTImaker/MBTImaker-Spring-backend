@@ -91,18 +91,16 @@ public class CommentService {
 
     @Transactional
     public void delete(Long id, String name, String password) {
-        final Optional<Comment> findComment = commentRepository.findById(id);
+        final Comment findComment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         validateComment(name, password, findComment);
 
         commentRepository.deleteById(id);
     }
 
-    private void validateComment(String name, String password, Optional<Comment> findComment) {
-        if (findComment.isEmpty())
-            throw new CommentNotFoundException();
-        else if (!findComment.get().getName().equals(name))
+    private void validateComment(String name, String password, Comment findComment) {
+        if (!findComment.getName().equals(name))
             throw new CommentNameNotMatchException();
-        else if (!findComment.get().getPassword().equals(password))
+        else if (!findComment.getPassword().equals(password))
             throw new CommentPasswordNotMatchException();
     }
 
