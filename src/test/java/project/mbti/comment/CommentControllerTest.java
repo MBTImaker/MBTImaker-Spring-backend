@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import project.mbti.comment.dto.CommentWriteDto;
-import project.mbti.comment.entity.MBTI;
+import project.mbti.MBTI;
 
 import java.nio.charset.StandardCharsets;
 
