@@ -54,7 +54,7 @@ public class ReportController {
         Map<String, Object> request = new HashMap<>();
         HttpEntity<Map<String, Object>> entity = new HttpEntity<Map<String, Object>>(request);
 
-        // Slack Message 내
+        // Slack Message
         request.put("username", "Report Alarm"); //slack bot name
         request.put("text", "신고 댓글 번호 : " + reportDto.getId() + "\n 신고 댓글 내용 : " + report.getComment().getContent() ); //전송할 메세지
 

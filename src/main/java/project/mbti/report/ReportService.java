@@ -15,6 +15,7 @@ import project.mbti.comment.CommentRepository;
 import project.mbti.report.dto.ReportAddDto;
 import project.mbti.report.dto.ReportUpdateDto;
 import project.mbti.report.entity.Report;
+import project.mbti.report.entity.ReportState;
 
 @Service
 @Transactional(readOnly = true)
@@ -44,6 +45,11 @@ public class ReportService {
         Report report = reportRepository.findById(reportUpdateDto.getId())
             .orElseThrow(()-> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
         report.update(reportUpdateDto.getState());
+
+        if (reportUpdateDto.getState().equals(ReportState.COMPLETED)){
+            commentRepository.deleteById(reportUpdateDto.getId()); // 신고처리 완료되면 삭제요청
+        }
+
         return report;
     }
 
