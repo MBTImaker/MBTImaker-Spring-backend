@@ -17,9 +17,16 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(400, "C001", "존재하지 않는 댓글입니다."),
     COMMENT_NAME_NOT_MATCH(400, "C002", "댓글 작성자 이름이 일치하지 않습니다."),
     COMMENT_PASSWORD_NOT_MATCH(400, "C003", "댓글 비밀번호가 일치하지 않습니다."),
+    ALREADY_DELETED_COMMENT(400, "C004", "이미 삭제된 댓글입니다."),
 
     // MBTI
-    MBTI_NOT_FOUND(400, "M001", "올바르지 않은 MBTI 유형입니다."),
+    INVALID_MBTI(400, "M001", "유효하지 않은 MBTI 유형입니다."),
+
+    // Report
+    REPORT_NOT_FOUND(400, "R001", "존재하지 않는 신고입니다."),
+    INVALID_REPORT_SUBJECT(400, "R002", "유효하지 않은 신고 유형입니다."),
+    INVALID_REPORT_STATE(400, "R003", "유효하지 않은 신고 상태입니다."),
+    ALREADY_COMPLETED_REPORT(400, "R003", "이미 처리된 신고입니다."),
     ;
 
     private int status;
