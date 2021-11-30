@@ -73,4 +73,8 @@ public class Comment {
                 .content(getContent())
                 .build();
     }
+
+    public void updateState(CommentState state) {
+        this.state = state;
+    }
 }

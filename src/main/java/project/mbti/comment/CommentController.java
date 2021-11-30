@@ -31,7 +31,7 @@ public class CommentController {
         final CommentDto commentDto = comment.convert();
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(WRITE_SUCCESS, commentDto));
+                .body(ResultResponse.of(WRITE_COMMENT_SUCCESS, commentDto));
     }
 
     @ApiOperation(value = "대댓글 작성")
@@ -41,7 +41,7 @@ public class CommentController {
         final CommentDto commentDto = comment.convert();
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(WRITE_SUCCESS, commentDto));
+                .body(ResultResponse.of(WRITE_COMMENT_SUCCESS, commentDto));
     }
 
     @ApiOperation(value = "댓글 삭제")
@@ -50,7 +50,7 @@ public class CommentController {
         commentService.delete(dto.getId(), dto.getName(), dto.getPassword());
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(DELETE_SUCCESS, null));
+                .body(ResultResponse.of(DELETE_COMMENT_SUCCESS, null));
     }
 
     @ApiOperation(value = "댓글 페이징 조회")
