@@ -63,11 +63,11 @@ public class ReportController {
     @ApiOperation(value = "신고 페이징 조회")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "page", value = "페이지", example = "1", required = true),
-            @ApiImplicitParam(name = "size", value = "한 페이지 신고 갯수", example = "5", required = true),
+            @ApiImplicitParam(name = "size", value = "신고 개수", example = "5", required = true),
     })
     @GetMapping("/report")
     public ResponseEntity<ResultResponse> reportList(@Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
-                                                     @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size,
+                                                     @Validated @NotNull(message = "신고 개수를 입력해주세요.") @RequestParam int size,
                                                      @Validated @NotNull(message = "신고 상태를 입력해주세요.") @RequestParam ReportState state) {
         final Page<ReportDto> reportPage = reportService.getReportPage(page, size, state);
 
