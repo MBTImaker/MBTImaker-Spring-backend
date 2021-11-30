@@ -11,13 +11,18 @@ import project.mbti.comment.dto.CommentDto;
 import project.mbti.comment.dto.ReplytDto;
 import project.mbti.comment.entity.Comment;
 import project.mbti.MBTI;
+import project.mbti.comment.entity.CommentState;
 import project.mbti.exception.CommentNameNotMatchException;
 import project.mbti.exception.CommentNotFoundException;
 import project.mbti.exception.CommentPasswordNotMatchException;
-import project.mbti.exception.MbtiNotFoundException;
+import project.mbti.exception.InvalidMbtiException;
+import project.mbti.report.ReportRepository;
+import project.mbti.report.entity.Report;
+import project.mbti.report.entity.ReportState;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +36,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ReportRepository reportRepository;
     private String regex = "";
 
     @PostConstruct
@@ -76,7 +82,7 @@ public class CommentService {
     @Transactional
     public Comment create(MBTI mbti, String name, String password, String content, Long parentId) {
         if (mbti.equals(MBTI.NOT_FOUND))
-            throw new MbtiNotFoundException();
+            throw new InvalidMbtiException();
 
         final Comment comment = Comment.builder()
                 .mbti(mbti)
@@ -94,7 +100,8 @@ public class CommentService {
         final Comment findComment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         validateComment(name, password, findComment);
 
-        commentRepository.deleteById(id);
+        findComment.updateState(CommentState.DELETED);
+        reportRepository.bulkUpdateReportStateByCommentId(id);
     }
 
     private void validateComment(String name, String password, Comment findComment) {
