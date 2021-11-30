@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Pattern;
 
-@ApiModel(value = "테스트 코드 요청 데이터 모델")
+@ApiModel(description = "테스트 코드 요청 데이터 모델")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TestCodeDto {
