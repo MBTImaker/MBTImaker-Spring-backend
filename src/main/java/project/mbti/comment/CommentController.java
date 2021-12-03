@@ -45,12 +45,13 @@ public class CommentController {
     }
 
     @ApiOperation(value = "댓글 삭제")
-    @DeleteMapping("/comment")
+    @PatchMapping("/comment")
     public ResponseEntity<ResultResponse> delete(@Validated @RequestBody CommentDeleteDto dto) {
-        commentService.delete(dto.getId(), dto.getName(), dto.getPassword());
+        final Comment comment = commentService.delete(dto.getId(), dto.getName(), dto.getPassword());
+        final CommentDto commentDto = comment.convert();
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(DELETE_COMMENT_SUCCESS, null));
+                .body(ResultResponse.of(DELETE_COMMENT_SUCCESS, commentDto));
     }
 
     @ApiOperation(value = "댓글 페이징 조회")
@@ -59,8 +60,9 @@ public class CommentController {
             @ApiImplicitParam(name = "size", value = "댓글 개수", example = "5", required = true)
     })
     @GetMapping("/comment")
-    public ResponseEntity<ResultResponse> commentList(@Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
-                                                      @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size) {
+    public ResponseEntity<ResultResponse> commentList(
+            @Validated @NotNull(message = "페이지를 입력해주세요.") @RequestParam int page,
+            @Validated @NotNull(message = "댓글 개수를 입력해주세요.") @RequestParam int size) {
         final Page<CommentDto> commentPage = commentService.getCommentPage(page, size);
 
         return ResponseEntity.ok()

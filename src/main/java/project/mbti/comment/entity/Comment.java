@@ -66,11 +66,12 @@ public class Comment {
     public CommentDto convert() {
         return CommentDto.builder()
                 .id(getId())
-                .parentId(getParent().getId())
                 .createdDate(getCreatedDate())
+                .mbti(getMbti())
                 .name(getName())
                 .password(getPassword())
                 .content(getContent())
+                .state(getState())
                 .build();
     }
 
