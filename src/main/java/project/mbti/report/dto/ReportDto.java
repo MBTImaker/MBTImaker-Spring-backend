@@ -25,8 +25,11 @@ public class ReportDto {
     @ApiModelProperty(value = "신고 유형", example = "욕설/비하")
     private ReportSubject subject;
 
-    @ApiModelProperty(value = "신고 사유", example = "너무 심한 욕설이에요!")
+    @ApiModelProperty(value = "신고 접수 사유", example = "너무 심한 욕설이에요!")
     private String description;
+
+    @ApiModelProperty(value = "신고 처리 사유", example = "'sh1t'은 'shit' 비속어에 해당.")
+    private String reason;
 
     @ApiModelProperty(value = "신고 상태", example = "REPORTED")
     private ReportState reportState;
@@ -34,7 +37,7 @@ public class ReportDto {
     @ApiModelProperty(value = "댓글 PK", example = "1")
     private Long commentId;
 
-    @ApiModelProperty(value = "댓글 내용", example = "ㅅ1방")
+    @ApiModelProperty(value = "댓글 내용", example = "sh1t")
     private String commentContent;
 
     @ApiModelProperty(value = "댓글 상태", example = "DELETED")

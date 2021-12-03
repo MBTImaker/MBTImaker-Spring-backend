@@ -75,7 +75,7 @@ public class ReportController {
                 .body(ResultResponse.of(FIND_REPORT_PAGE_SUCCESS, reportPage));
     }
 
-    @ApiOperation(value = "신고 처리")
+    @ApiOperation(value = "신고 처리", notes = "처리 일자는 자동으로 처리 사유에 기재됩니다.")
     @PatchMapping("/report")
     public ResponseEntity<ResultResponse> process(@Validated @RequestBody ReportProcessDto dto) {
         final ReportDto reportDto = reportService.process(dto);

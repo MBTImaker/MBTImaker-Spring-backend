@@ -116,7 +116,7 @@ class CommentServiceTest {
                .build();
        ReflectionTestUtils.setField(comment, "id", 1L);
 
-       doNothing().when(reportRepository).bulkUpdateReportStateByCommentId(any(Long.class));
+       doNothing().when(reportRepository).bulkUpdateReportStateByCommentId(any(Long.class), any(String.class));
        doNothing().when(em).flush();
        doReturn(Optional.of(comment)).when(commentRepository).findById(any(Long.class));
 
