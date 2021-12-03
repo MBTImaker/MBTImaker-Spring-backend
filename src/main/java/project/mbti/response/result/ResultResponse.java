@@ -2,10 +2,13 @@ package project.mbti.response.result;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @ApiModel(description = "결과 응답 데이터 모델")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResultResponse {
 
     @ApiModelProperty(value = "Http 상태 코드")
