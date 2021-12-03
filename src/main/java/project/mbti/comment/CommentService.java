@@ -17,15 +17,9 @@ import project.mbti.exception.CommentNotFoundException;
 import project.mbti.exception.CommentPasswordNotMatchException;
 import project.mbti.exception.InvalidMbtiException;
 import project.mbti.report.ReportRepository;
-import project.mbti.report.entity.Report;
-import project.mbti.report.entity.ReportState;
+import project.mbti.util.BadWordsFilter;
 
-import javax.annotation.PostConstruct;
-import java.io.*;
-import java.util.List;
-import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.persistence.EntityManager;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
@@ -37,47 +31,8 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
-    private String regex = "";
-
-    @PostConstruct
-    private void getBadWordsFromTxt() throws IOException {
-        final File file = new File("bad_words.txt");
-        try {
-            final FileReader fileReader = new FileReader(file);
-            final BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String badWord = "";
-            while ((badWord = bufferedReader.readLine()) != null) {
-                regex += badWord;
-                regex += "|";
-            }
-            regex = regex.substring(0, regex.length() - 1);
-            bufferedReader.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String filterText(String sText) {
-        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.COMMENTS);
-        Matcher m = p.matcher(sText);
-
-        StringBuffer sb = new StringBuffer();
-        while (m.find()) {
-            m.appendReplacement(sb, maskWord(m.group()));
-        }
-        m.appendTail(sb);
-
-        return sb.toString();
-    }
-
-    private String maskWord(String word) {
-        StringBuffer buff = new StringBuffer();
-        char[] ch = word.toCharArray();
-        for (int i = 0; i < ch.length; i++) {
-            buff.append("*");
-        }
-        return buff.toString();
-    }
+    private final BadWordsFilter badWordsFilter;
+    private final EntityManager em;
 
     @Transactional
     public Comment create(MBTI mbti, String name, String password, String content, Long parentId) {
@@ -88,7 +43,7 @@ public class CommentService {
                 .mbti(mbti)
                 .name(name)
                 .password(password)
-                .content(filterText(content))
+                .content(badWordsFilter.filterText(content))
                 .parent(commentRepository.findById(parentId))
                 .build();
 
@@ -96,12 +51,15 @@ public class CommentService {
     }
 
     @Transactional
-    public void delete(Long id, String name, String password) {
+    public Comment delete(Long id, String name, String password) {
         final Comment findComment = commentRepository.findById(id).orElseThrow(CommentNotFoundException::new);
         validateComment(name, password, findComment);
 
         findComment.updateState(CommentState.DELETED);
+        em.flush();
         reportRepository.bulkUpdateReportStateByCommentId(id);
+
+        return findComment;
     }
 
     private void validateComment(String name, String password, Comment findComment) {
@@ -121,9 +79,5 @@ public class CommentService {
         page = (page == 0 ? 0 : page - 1);
         Pageable pageable = PageRequest.of(page, size, Sort.by(ASC, "id"));
         return commentRepository.findReplyDtoPage(parentId, pageable);
-    }
-
-    public Optional<Comment> findById(Long id) {
-        return commentRepository.findById(id);
     }
 }
