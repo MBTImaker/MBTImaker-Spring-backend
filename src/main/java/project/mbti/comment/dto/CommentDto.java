@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import project.mbti.MBTI;
+import project.mbti.comment.entity.CommentState;
 
 import java.time.LocalDateTime;
 
@@ -21,9 +22,6 @@ public class CommentDto {
 
     @ApiModelProperty(value = "댓글 PK", example = "1")
     private Long id;
-
-    @ApiModelProperty(value = "부모 댓글 FK", example = "1",  notes = "댓글인 경우, PK와 동일")
-    private Long parentId;
 
     @ApiModelProperty(value = "댓글 생성 일자", example = "2021-10-30 08:31:01")
     private LocalDateTime createdDate;
@@ -42,4 +40,7 @@ public class CommentDto {
 
     @ApiModelProperty(value = "대댓글 개수", example = "5")
     private int childSize;
+
+    @ApiModelProperty(value = "댓글 상태", example = "WRITTEN")
+    private CommentState state;
 }
