@@ -21,6 +21,8 @@ import project.mbti.util.BadWordsFilter;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -57,7 +59,7 @@ public class CommentService {
 
         findComment.updateState(CommentState.DELETED);
         em.flush();
-        reportRepository.bulkUpdateReportStateByCommentId(id);
+        reportRepository.bulkUpdateReportStateByCommentId(id, "댓글 작성자가 해당 댓글을 삭제함 - " + LocalDateTime.now());
 
         return findComment;
     }

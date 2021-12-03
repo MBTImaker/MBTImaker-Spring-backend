@@ -37,6 +37,9 @@ public class Report {
     @Lob
     private String description;
 
+    @Lob
+    private String reason;
+
     @Enumerated(value = STRING)
     private ReportState state;
 
@@ -50,9 +53,11 @@ public class Report {
         this.subject = subject;
         this.description = description;
         this.state = ReportState.REPORTED;
+        this.reason = "";
     }
 
-    public void updateState(ReportState state) {
+    public void process(ReportState state, String reason) {
         this.state = state;
+        this.reason = reason + " - " + LocalDateTime.now();
     }
 }
