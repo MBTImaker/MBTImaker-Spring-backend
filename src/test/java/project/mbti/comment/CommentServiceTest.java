@@ -10,7 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.*;
 import org.springframework.test.util.ReflectionTestUtils;
 import project.mbti.MBTI;
+import project.mbti.block.BlockRepository;
 import project.mbti.comment.dto.CommentDto;
+import project.mbti.comment.dto.CommentWriteResultType;
 import project.mbti.comment.entity.Comment;
 import project.mbti.comment.entity.CommentState;
 import project.mbti.exception.CommentNameNotMatchException;
@@ -38,6 +40,9 @@ class CommentServiceTest {
 
     @Mock
     private ReportRepository reportRepository;
+
+    @Mock
+    private BlockRepository blockRepository;
 
     @Mock
     private EntityManager em;
@@ -70,18 +75,16 @@ class CommentServiceTest {
                 .build();
         ReflectionTestUtils.setField(filteredComment, "id", 1L);
 
+        doReturn(Optional.empty()).when(blockRepository).findByIp(any(String.class));
         doReturn("****!!").when(badWordsFilter).filterText("shit!!");
         doReturn(filteredComment).when(commentRepository).save(any(Comment.class));
 
         // when
-        final Comment savedComment = commentService.create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L);
+        final CommentWriteResultType result = commentService.create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
 
         // then
         verify(commentRepository, times(1)).save(any(Comment.class));
-        assertThat(comment.getId()).isEqualTo(savedComment.getId());
-        assertThat(comment.getName()).isEqualTo(savedComment.getName());
-        assertThat(comment.getPassword()).isEqualTo(savedComment.getPassword());
-        assertThat(comment.getContent()).isNotEqualTo(savedComment.getContent());
+        assertThat(result).isEqualTo(CommentWriteResultType.SUCCESS);
     }
 
    @Test
@@ -96,8 +99,10 @@ class CommentServiceTest {
                .parent(Optional.empty())
                .build();
 
+       doReturn(Optional.empty()).when(blockRepository).findByIp(any(String.class));
+
        // when
-       final Executable create = () -> commentService.create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L);
+       final Executable create = () -> commentService.create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
 
        // then
        assertThrows(InvalidMbtiException.class, create);
@@ -209,6 +214,7 @@ class CommentServiceTest {
        final Page<CommentDto> commentPage = commentService.getCommentPage(1, 10);
 
        // then
+       // 처음-끝 테스트 추가
        assertThat(commentPage.getTotalElements()).isEqualTo(5);
    }
 }
