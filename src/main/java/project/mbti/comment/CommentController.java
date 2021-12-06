@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import project.mbti.comment.dto.*;
+import project.mbti.response.result.ResultCode;
 import project.mbti.response.result.ResultResponse;
 import project.mbti.comment.entity.Comment;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
 
 import static project.mbti.response.result.ResultCode.*;
@@ -26,22 +28,26 @@ public class CommentController {
 
     @ApiOperation(value = "댓글 작성")
     @PostMapping("/comment")
-    public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto) {
-        final Comment comment = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L);
-        final CommentDto commentDto = comment.convert();
+    public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto, HttpServletRequest request) {
+        final String clientIp = request.getHeader("X-Forwarded-For");
+        final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L, clientIp);
+        final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
+        final ResultCode resultCode = result.equals(CommentWriteResultType.SUCCESS) ? WRITE_COMMENT_SUCCESS : WRITE_COMMENT_FAILURE;
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(WRITE_COMMENT_SUCCESS, commentDto));
+                .body(ResultResponse.of(resultCode, commentWriteResponseDto));
     }
 
     @ApiOperation(value = "대댓글 작성")
     @PostMapping("/reply")
-    public ResponseEntity<ResultResponse> reply(@Validated @RequestBody ReplyWriteDto dto) {
-        final Comment comment = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), dto.getParentId());
-        final CommentDto commentDto = comment.convert();
+    public ResponseEntity<ResultResponse> reply(@Validated @RequestBody ReplyWriteDto dto, HttpServletRequest request) {
+        final String clientIp = request.getHeader("X-Forwarded-For");
+        final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), dto.getParentId(), clientIp);
+        final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
+        final ResultCode resultCode = result.equals(CommentWriteResultType.SUCCESS) ? WRITE_COMMENT_SUCCESS : WRITE_COMMENT_FAILURE;
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(WRITE_COMMENT_SUCCESS, commentDto));
+                .body(ResultResponse.of(resultCode, commentWriteResponseDto));
     }
 
     @ApiOperation(value = "댓글 삭제")

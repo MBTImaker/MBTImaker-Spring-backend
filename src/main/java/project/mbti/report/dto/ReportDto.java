@@ -42,4 +42,7 @@ public class ReportDto {
 
     @ApiModelProperty(value = "댓글 상태", example = "DELETED")
     private CommentState commentState;
+
+    @ApiModelProperty(value = "댓글 작성자 IP", example = "0:0:0:0:0:0:0:1")
+    private String writerIp;
 }
