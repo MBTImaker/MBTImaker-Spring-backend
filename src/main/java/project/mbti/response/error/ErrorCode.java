@@ -27,6 +27,10 @@ public enum ErrorCode {
     INVALID_REPORT_SUBJECT(400, "R002", "유효하지 않은 신고 유형입니다."),
     INVALID_REPORT_STATE(400, "R003", "유효하지 않은 신고 상태입니다."),
     ALREADY_COMPLETED_REPORT(400, "R003", "이미 처리된 신고입니다."),
+
+    // Block
+    ALREADY_BLOCKED_IP(400, "B001", "이미 차단된 IP입니다."),
+    IP_NOT_FOUND(400, "B002", "해당 IP는 차단되어 있지 않습니다."),
     ;
 
     private int status;
