@@ -9,9 +9,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.transaction.annotation.Transactional;
 import project.mbti.MBTI;
-import project.mbti.comment.dto.CommentDeleteDto;
-import project.mbti.comment.dto.CommentDto;
-import project.mbti.comment.dto.CommentWriteDto;
+import project.mbti.comment.dto.*;
 import project.mbti.comment.entity.CommentState;
 import project.mbti.response.error.ErrorResponse;
 import project.mbti.response.result.ResultResponse;
@@ -43,18 +41,12 @@ public class CommentIntegrationTest {
 
         // when
         ResponseEntity<ResultResponse> response = restTemplate.postForEntity(url, request, ResultResponse.class);
-        final CommentDto commentDto = objectMapper.convertValue(response.getBody().getData(), CommentDto.class);
+        final CommentWriteResponseDto commentWriteResponseDto = objectMapper.convertValue(response.getBody().getData(), CommentWriteResponseDto.class);
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody().getCode()).isEqualTo("C100");
-        assertThat(commentDto.getId()).isEqualTo(1L);
-        assertThat(commentDto.getName()).isEqualTo(dto.getName());
-        assertThat(commentDto.getPassword()).isEqualTo(dto.getPassword());
-        assertThat(commentDto.getContent()).isEqualTo(dto.getContent());
-        assertThat(commentDto.getMbti()).isEqualTo(dto.getMbti());
-        assertThat(commentDto.getChildSize()).isEqualTo(0);
-        assertThat(commentDto.getCreatedDate()).isNotNull();
+        assertThat(commentWriteResponseDto.getResult()).isEqualTo(CommentWriteResultType.SUCCESS);
     }
 
     @Test

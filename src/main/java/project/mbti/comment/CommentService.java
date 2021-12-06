@@ -7,7 +7,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import project.mbti.block.BlockRepository;
 import project.mbti.comment.dto.CommentDto;
+import project.mbti.comment.dto.CommentWriteResultType;
 import project.mbti.comment.dto.ReplytDto;
 import project.mbti.comment.entity.Comment;
 import project.mbti.MBTI;
@@ -23,8 +25,8 @@ import javax.persistence.EntityManager;
 
 import java.time.LocalDateTime;
 
-import static org.springframework.data.domain.Sort.Direction.ASC;
-import static org.springframework.data.domain.Sort.Direction.DESC;
+import static org.springframework.data.domain.Sort.Direction.*;
+import static project.mbti.comment.dto.CommentWriteResultType.*;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,23 +35,33 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final ReportRepository reportRepository;
+    private final BlockRepository blockRepository;
     private final BadWordsFilter badWordsFilter;
     private final EntityManager em;
 
     @Transactional
-    public Comment create(MBTI mbti, String name, String password, String content, Long parentId) {
-        if (mbti.equals(MBTI.NOT_FOUND))
-            throw new InvalidMbtiException();
+    public CommentWriteResultType create(MBTI mbti, String name, String password, String content, Long parentId, String ip) {
+        CommentWriteResultType result;
+        if (blockRepository.findByIp(ip).isPresent())
+            result = BLOCKED_IP;
+        else {
+            if (mbti.equals(MBTI.NOT_FOUND))
+                throw new InvalidMbtiException();
 
-        final Comment comment = Comment.builder()
-                .mbti(mbti)
-                .name(name)
-                .password(password)
-                .content(badWordsFilter.filterText(content))
-                .parent(commentRepository.findById(parentId))
-                .build();
+            final Comment comment = Comment.builder()
+                    .mbti(mbti)
+                    .name(name)
+                    .password(password)
+                    .content(badWordsFilter.filterText(content))
+                    .parent(commentRepository.findById(parentId))
+                    .ip(ip)
+                    .build();
 
-        return commentRepository.save(comment);
+            result = SUCCESS;
+            commentRepository.save(comment);
+        }
+
+        return result;
     }
 
     @Transactional

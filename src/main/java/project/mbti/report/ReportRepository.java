@@ -11,11 +11,12 @@ import project.mbti.report.entity.Report;
 import project.mbti.report.entity.ReportState;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("select new project.mbti.report.dto." +
-            "ReportDto(r.id, r.subject, r.description, r.reason, r.state, r.comment.id, r.comment.content, r.comment.state) " +
+            "ReportDto(r.id, r.subject, r.description, r.reason, r.state, r.comment.id, r.comment.content, r.comment.state, r.ip) " +
             "from Report r " +
             "join r.comment c " +
             "where r.state = :state")
@@ -24,4 +25,6 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Modifying(clearAutomatically = true)
     @Query("update Report r set r.state = 'CANCELED', r.reason = :reason where r.comment.id = :commentId and r.state = 'REPORTED'")
     void bulkUpdateReportStateByCommentId(@Param("commentId") Long commentId, @Param("reason") String reason);
+
+    Optional<Report> findByIpAndCommentId(String ip, Long commentId);
 }

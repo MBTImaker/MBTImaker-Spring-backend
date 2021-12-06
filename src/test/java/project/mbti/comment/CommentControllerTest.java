@@ -15,6 +15,7 @@ import project.mbti.MBTI;
 import project.mbti.comment.dto.CommentDeleteDto;
 import project.mbti.comment.dto.CommentDto;
 import project.mbti.comment.dto.CommentWriteDto;
+import project.mbti.comment.dto.CommentWriteResultType;
 import project.mbti.comment.entity.Comment;
 import project.mbti.comment.entity.CommentState;
 import project.mbti.exception.CommentNameNotMatchException;
@@ -66,7 +67,7 @@ class CommentControllerTest {
 
         CommentWriteDto commentWriteDto = new CommentWriteDto(MBTI.ISTJ, "만두", "1234", "댓글");
 
-        doReturn(comment).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L);
+        doReturn(CommentWriteResultType.SUCCESS).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
 
         // when
         final ResultActions perform = mockMvc.perform(
@@ -94,7 +95,7 @@ class CommentControllerTest {
 
         CommentWriteDto commentWriteDto = new CommentWriteDto(MBTI.NOT_FOUND, "만두", "1234", "댓글");
 
-        doThrow(new InvalidMbtiException()).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L);
+        doThrow(new InvalidMbtiException()).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
 
         // when
         final ResultActions perform = mockMvc.perform(
