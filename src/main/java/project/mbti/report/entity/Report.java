@@ -47,13 +47,16 @@ public class Report {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    private String ip;
+
     @Builder
-    public Report(Comment comment, ReportSubject subject, String description) {
+    public Report(Comment comment, ReportSubject subject, String description, String ip) {
         this.comment = comment;
         this.subject = subject;
         this.description = description;
         this.state = ReportState.REPORTED;
         this.reason = "";
+        this.ip = ip;
     }
 
     public void process(ReportState state, String reason) {
