@@ -37,7 +37,7 @@ public class ReplyWriteDto {
 
     @ApiModelProperty(value = "작성자 비밀번호", example = "1234", required = true)
     @Length(min = 4, max = 20, message = "작성자 비밀번호는 4자 이상, 20자 이하로 입력해주세요.")
-    @NotBlank(message = "작성자 비밀번호을 입력해주세요.")
+    @NotBlank(message = "작성자 비밀번호를 입력해주세요.")
     private String password;
 
     @ApiModelProperty(value = "댓글 내용", example = "우와 신기해요!", required = true)
