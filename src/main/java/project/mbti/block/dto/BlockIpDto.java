@@ -16,6 +16,6 @@ import javax.validation.constraints.NotBlank;
 public class BlockIpDto {
 
     @ApiModelProperty(value = "작성자 IP", example = "111.111.111.111,11.111.11.111", required = true)
-    @NotBlank(message = "IP는 필수입니다.")
+    @NotBlank(message = "작성자 IP는 필수입니다.")
     private String ip;
 }
