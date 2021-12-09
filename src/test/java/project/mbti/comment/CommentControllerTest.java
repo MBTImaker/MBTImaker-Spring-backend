@@ -44,7 +44,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * 이 밖에 테스트를 하는 데 필요하지 않은 컴포넌트들(ex. @Service, @Repository)은 Bean으로 등록하지 않는다.
  */
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(CommentController.class)
+@WebMvcTest(
+        value = CommentController.class,
+        properties = "spring.config.location=classpath:/application-test.yml")
 class CommentControllerTest {
 
     @Autowired
