@@ -49,10 +49,12 @@ public class Comment {
     @Column(name = "created_date")
     private LocalDateTime createdDate;
 
+    @Lob
+    private String content;
+
+    private String ip;
     private String name;
     private String password;
-    private String content;
-    private String ip;
 
     @Builder
     public Comment(Optional<Comment> parent, MBTI mbti, String name, String password, String content, String ip) {
