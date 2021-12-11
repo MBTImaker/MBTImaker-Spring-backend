@@ -29,13 +29,34 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성")
     @PostMapping("/comment")
     public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto, HttpServletRequest request) {
-        final String clientIp = request.getHeader("X-Forwarded-For");
+        final String clientIp = getClientIp(request);
+
         final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L, clientIp);
         final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
         final ResultCode resultCode = result.equals(CommentWriteResultType.SUCCESS) ? WRITE_COMMENT_SUCCESS : WRITE_COMMENT_FAILURE;
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(resultCode, commentWriteResponseDto));
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+            if (clientIp == null) {
+                clientIp = request.getHeader("WL-Proxy-Client-IP");
+                if (clientIp == null) {
+                    clientIp = request.getHeader("HTTP_CLIENT_IP");
+                    if (clientIp == null) {
+                        clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+                        if (clientIp == null)
+                            clientIp = request.getRemoteAddr();
+                    }
+                }
+            }
+        }
+
+        return clientIp;
     }
 
     @ApiOperation(value = "대댓글 작성")
