@@ -52,8 +52,9 @@ public class BlockController {
     @DeleteMapping("/block")
     public ResponseEntity<ResultResponse> unblock(@Validated @RequestBody BlockIpDto dto) {
         blockService.delete(dto.getIp());
+        final BlockIpDto blockIpDto = new BlockIpDto(dto.getIp());
 
         return ResponseEntity.ok()
-                .body(ResultResponse.of(UNBLOCK_IP_SUCCESS, null));
+                .body(ResultResponse.of(UNBLOCK_IP_SUCCESS, blockIpDto));
     }
 }
