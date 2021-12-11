@@ -53,14 +53,16 @@ public class ReportService {
         if (subject.equals(ReportSubject.NOT_FOUND))
             throw new InvalidReportSubjectException();
 
+        final Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
+        if (comment.getState().equals(DELETED))
+            throw new AlreadyDeletedCommentException();
+
         ReportWriteResultType result;
         if (blockRepository.findByIp(ip).isPresent())
             result = BLOCKED_IP;
         else if (reportRepository.findByIpAndCommentId(ip, commentId).isPresent())
             result = ALREADY_EXIST;
         else {
-            final Comment comment = commentRepository.findById(commentId).orElseThrow(CommentNotFoundException::new);
-
             final Report report = Report.builder()
                     .comment(comment)
                     .subject(subject)
