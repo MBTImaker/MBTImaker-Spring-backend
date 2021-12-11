@@ -29,13 +29,33 @@ public class ReportController {
     @ApiOperation(value = "댓글 신고")
     @PostMapping("/report")
     public ResponseEntity<ResultResponse> report(@Validated @RequestBody ReportWriteDto dto, HttpServletRequest request) {
-        final String clientIp = request.getHeader("X-Forwarded-For");
+        final String clientIp = getClientIp(request);
         final ReportWriteResultType result = reportService.create(dto.getSubject(), dto.getDescription(), dto.getCommentId(), clientIp);
         final ReportWriteResponseDto reportResultDto = new ReportWriteResponseDto(result, clientIp);
         final ResultCode resultCode = result.equals(ReportWriteResultType.SUCCESS) ? WRITE_REPORT_SUCCESS : WRITE_REPORT_FAILURE;
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(resultCode, reportResultDto));
+    }
+
+    private String getClientIp(HttpServletRequest request) {
+        String clientIp = request.getHeader("X-Forwarded-For");
+        if (clientIp == null) {
+            clientIp = request.getHeader("Proxy-Client-IP");
+            if (clientIp == null) {
+                clientIp = request.getHeader("WL-Proxy-Client-IP");
+                if (clientIp == null) {
+                    clientIp = request.getHeader("HTTP_CLIENT_IP");
+                    if (clientIp == null) {
+                        clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
+                        if (clientIp == null)
+                            clientIp = request.getRemoteAddr();
+                    }
+                }
+            }
+        }
+
+        return clientIp;
     }
 
     @ApiOperation(value = "신고 페이징 조회")
