@@ -77,7 +77,7 @@ public class CommentIntegrationTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getCode()).isEqualTo("U002");
-        assertThat(response.getBody().getErrors().size()).isEqualTo(4);
+        assertThat(response.getBody().getErrors().size()).isEqualTo(3);
     }
 
     void init() {
@@ -157,6 +157,6 @@ public class CommentIntegrationTest {
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getCode()).isEqualTo("U002");
-        assertThat(response.getBody().getErrors().size()).isEqualTo(5);
+        assertThat(response.getBody().getErrors().size()).isEqualTo(4);
     }
 }
