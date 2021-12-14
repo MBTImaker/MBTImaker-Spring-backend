@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -28,7 +29,6 @@ public class CommentDeleteDto {
     private String name;
 
     @ApiModelProperty(value = "작성자 비밀번호", example = "1234", required = true)
-    @Length(min = 4, max = 20, message = "작성자 비밀번호는 4자 이상, 20자 이하로 입력해주세요.")
-    @NotBlank(message = "작성자 비밀번호를 입력해주세요.")
+    @Pattern(regexp = "^[0-9]{4,20}$", message = "작성자 비밀번호는 4자 이상 20자 이하 숫자만 입력해주세요.")
     private String password;
 }
