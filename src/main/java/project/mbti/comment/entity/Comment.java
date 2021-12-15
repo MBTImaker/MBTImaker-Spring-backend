@@ -50,6 +50,7 @@ public class Comment {
     private LocalDateTime createdDate;
 
     @Lob
+    @Column(length = 500)
     private String content;
 
     private String ip;
