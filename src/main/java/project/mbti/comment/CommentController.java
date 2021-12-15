@@ -29,8 +29,8 @@ public class CommentController {
     @ApiOperation(value = "댓글 작성")
     @PostMapping("/comment")
     public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto, HttpServletRequest request) {
+        dto.removeAllEmojisAndValidateLengthOfName();
         final String clientIp = getClientIp(request);
-
         final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L, clientIp);
         final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
         final ResultCode resultCode = result.equals(CommentWriteResultType.SUCCESS) ? WRITE_COMMENT_SUCCESS : WRITE_COMMENT_FAILURE;
@@ -62,6 +62,7 @@ public class CommentController {
     @ApiOperation(value = "대댓글 작성")
     @PostMapping("/reply")
     public ResponseEntity<ResultResponse> reply(@Validated @RequestBody ReplyWriteDto dto, HttpServletRequest request) {
+        dto.removeAllEmojisAndValidateLengthOfName();
         final String clientIp = request.getHeader("X-Forwarded-For");
         final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), dto.getParentId(), clientIp);
         final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
@@ -74,6 +75,7 @@ public class CommentController {
     @ApiOperation(value = "댓글 삭제")
     @PatchMapping("/comment")
     public ResponseEntity<ResultResponse> delete(@Validated @RequestBody CommentDeleteDto dto) {
+        dto.removeAllEmojisAndValidateLengthOfName();
         final Comment comment = commentService.delete(dto.getId(), dto.getName(), dto.getPassword());
         final CommentDto commentDto = comment.convert();
 
