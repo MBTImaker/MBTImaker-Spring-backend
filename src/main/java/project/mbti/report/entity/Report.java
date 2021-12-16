@@ -35,11 +35,9 @@ public class Report {
     private ReportSubject subject;
 
     @Lob
-    @Column(length = 500)
     private String description;
 
     @Lob
-    @Column(length = 500)
     private String reason;
 
     @Enumerated(value = STRING)
