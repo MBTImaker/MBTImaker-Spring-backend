@@ -49,4 +49,8 @@ public class CommentWriteDto {
         if (this.name.length() < 2 || this.name.length() > 10)
             throw new CommentWriterNameLengthException(ErrorResponse.FieldError.of("name", getName(), "작성자 이름은 2자 이상, 10자 이하로 입력해주세요."));
     }
+
+    public void applyLineBreaksAndRemoveContinuousLineBreaksOfContent() {
+        this.content = getContent().trim().replaceAll("(\r?\n){2,}", "<br>").replaceAll("\\s+", " ");
+    }
 }

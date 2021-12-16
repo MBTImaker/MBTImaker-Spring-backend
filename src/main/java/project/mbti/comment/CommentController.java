@@ -13,6 +13,7 @@ import project.mbti.comment.dto.*;
 import project.mbti.response.result.ResultCode;
 import project.mbti.response.result.ResultResponse;
 import project.mbti.comment.entity.Comment;
+import project.mbti.util.ClientIpExtracter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotNull;
@@ -25,38 +26,20 @@ import static project.mbti.response.result.ResultCode.*;
 public class CommentController {
 
     private final CommentService commentService;
+    private final ClientIpExtracter clientIpExtracter;
 
     @ApiOperation(value = "댓글 작성")
     @PostMapping("/comment")
     public ResponseEntity<ResultResponse> write(@Validated @RequestBody CommentWriteDto dto, HttpServletRequest request) {
         dto.removeAllEmojisAndValidateLengthOfName();
-        final String clientIp = getClientIp(request);
+        dto.applyLineBreaksAndRemoveContinuousLineBreaksOfContent();
+        final String clientIp = clientIpExtracter.extract(request);
         final CommentWriteResultType result = commentService.create(dto.getMbti(), dto.getName(), dto.getPassword(), dto.getContent(), 0L, clientIp);
         final CommentWriteResponseDto commentWriteResponseDto = new CommentWriteResponseDto(result, clientIp);
         final ResultCode resultCode = result.equals(CommentWriteResultType.SUCCESS) ? WRITE_COMMENT_SUCCESS : WRITE_COMMENT_FAILURE;
 
         return ResponseEntity.ok()
                 .body(ResultResponse.of(resultCode, commentWriteResponseDto));
-    }
-
-    private String getClientIp(HttpServletRequest request) {
-        String clientIp = request.getHeader("X-Forwarded-For");
-        if (clientIp == null) {
-            clientIp = request.getHeader("Proxy-Client-IP");
-            if (clientIp == null) {
-                clientIp = request.getHeader("WL-Proxy-Client-IP");
-                if (clientIp == null) {
-                    clientIp = request.getHeader("HTTP_CLIENT_IP");
-                    if (clientIp == null) {
-                        clientIp = request.getHeader("HTTP_X_FORWARDED_FOR");
-                        if (clientIp == null)
-                            clientIp = request.getRemoteAddr();
-                    }
-                }
-            }
-        }
-
-        return clientIp;
     }
 
     @ApiOperation(value = "대댓글 작성")
