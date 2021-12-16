@@ -27,6 +27,8 @@ public class ReportProcessDto {
     private ReportState state;
 
     @ApiModelProperty(value = "처리 사유", example = "'sh1t'은 'shit' 비속어에 해당.", required = true)
+    @Length(min = 1, max = 500, message = "처리 사유는 1자 이상, 500자 이하로 입력해주세요.")
+    @NotBlank(message = "처리 사유를 입력해주세요.")
     private String reason;
 
     public void removeAllEmojisAndApplyLineBreaksAndRemoveContinuousLineBreakAndValidateLengthOfReason() {

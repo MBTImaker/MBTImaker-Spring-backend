@@ -35,6 +35,8 @@ public class ReplyWriteDto {
     private MBTI mbti;
 
     @ApiModelProperty(value = "작성자 이름", example = "만두", required = true)
+    @Length(min = 2, max = 10, message = "작성자 이름은 2자 이상, 10자 이하로 입력해주세요.")
+    @NotBlank(message = "작성자 이릉믈 입력해주세요.")
     private String name;
 
     @ApiModelProperty(value = "작성자 비밀번호", example = "1234", required = true)
