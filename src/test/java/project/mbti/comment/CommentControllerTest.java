@@ -22,6 +22,7 @@ import project.mbti.exception.CommentNameNotMatchException;
 import project.mbti.exception.CommentNotFoundException;
 import project.mbti.exception.CommentPasswordNotMatchException;
 import project.mbti.exception.InvalidMbtiException;
+import project.mbti.util.ClientIpExtracter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,9 @@ class CommentControllerTest {
     @MockBean
     private CommentService commentService;
 
+    @MockBean
+    private ClientIpExtracter clientIpExtracter;
+
     @Test
     @DisplayName("댓글 작성 API")
     void write_api() throws Exception {
@@ -67,6 +71,7 @@ class CommentControllerTest {
 
         CommentWriteDto commentWriteDto = new CommentWriteDto(MBTI.ISTJ, "만두", "1234", "댓글");
 
+        doReturn("127.0.0.1").when(clientIpExtracter).extract(any());
         doReturn(CommentWriteResultType.SUCCESS).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
 
         // when
@@ -93,6 +98,7 @@ class CommentControllerTest {
                 .parent(Optional.empty())
                 .build();
 
+        doReturn("127.0.0.1").when(clientIpExtracter).extract(any());
         CommentWriteDto commentWriteDto = new CommentWriteDto(MBTI.NOT_FOUND, "만두", "1234", "댓글");
 
         doThrow(new InvalidMbtiException()).when(commentService).create(comment.getMbti(), comment.getName(), comment.getPassword(), comment.getContent(), 0L, "127.0.0.1");
