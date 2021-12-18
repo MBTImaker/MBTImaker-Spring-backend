@@ -53,6 +53,6 @@ public class CommentWriteDto {
     }
 
     public void applyLineBreaksAndRemoveContinuousLineBreaksOfContent() {
-        this.content = getContent().trim().replaceAll("(\r?\n){2,}", "<br>").replaceAll("\\s+", " ");
+        this.content = getContent().trim().replaceAll("(\r?\n)", "<br>").replaceAll("(<br>){2,}", "<br>").replaceAll("\\s+", " ");
     }
 }

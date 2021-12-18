@@ -34,7 +34,7 @@ public class ReportWriteDto {
     private String description;
 
     public void removeAllEmojisAndApplyLineBreaksAndRemoveContinuousLineBreakAndValidateLengthOfDescription() {
-        this.description = EmojiParser.removeAllEmojis(getDescription()).trim().replaceAll("(\r?\n){2,}", "<br>").replaceAll("\\s+", " ");
+        this.description = EmojiParser.removeAllEmojis(getDescription()).trim().replaceAll("(\r?\n)", "<br>").replaceAll("(<br>){2,}", "<br>").replaceAll("\\s+", " ");
         if (this.description.isBlank())
             throw new ReportDescriptionLengthException(ErrorResponse.FieldError.of("description", getDescription(), "신고 사유를 입력해주세요."));
         if (this.description.length() > 500)

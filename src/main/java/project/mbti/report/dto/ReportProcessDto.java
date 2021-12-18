@@ -32,7 +32,7 @@ public class ReportProcessDto {
     private String reason;
 
     public void removeAllEmojisAndApplyLineBreaksAndRemoveContinuousLineBreakAndValidateLengthOfReason() {
-        this.reason = EmojiParser.removeAllEmojis(getReason()).trim().replaceAll("(\r?\n){2,}", "<br>").replaceAll("\\s+", " ");
+        this.reason = EmojiParser.removeAllEmojis(getReason()).trim().replaceAll("(\r?\n)", "<br>").replaceAll("(<br>){2,}", "<br>").replaceAll("\\s+", " ");
         if (this.reason.isBlank())
             throw new ReportProcessReasonLengthException(ErrorResponse.FieldError.of("reason", getReason(), "처리 사유를 입력해주세요."));
         if (this.reason.length() < 1 || this.reason.length() > 500)
