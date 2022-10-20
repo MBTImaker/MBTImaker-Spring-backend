@@ -19,9 +19,11 @@ public class BadWordsFilter {
             final FileReader fileReader = new FileReader(file);
             final BufferedReader bufferedReader = new BufferedReader(fileReader);
             String badWord = "";
+            final StringBuilder builder = new StringBuilder();
             while ((badWord = bufferedReader.readLine()) != null)
-                regex += badWord + "|";
-            regex = regex.substring(0, regex.length() - 1);
+                builder.append(badWord).append("|");
+            builder.deleteCharAt(builder.length() - 1);
+            regex = builder.toString();
             bufferedReader.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -29,21 +31,21 @@ public class BadWordsFilter {
     }
 
     public String filterText(String sText) {
-        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.COMMENTS);
-        Matcher m = p.matcher(sText);
+        final Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.COMMENTS);
+        final Matcher m = p.matcher(sText);
 
-        StringBuffer sb = new StringBuffer();
+        final StringBuilder builder = new StringBuilder();
         while (m.find())
-            m.appendReplacement(sb, maskWord(m.group()));
-        m.appendTail(sb);
+            m.appendReplacement(builder, maskWord(m.group()));
+        m.appendTail(builder);
 
-        return sb.toString();
+        return builder.toString();
     }
 
     private String maskWord(String word) {
-        StringBuilder buff = new StringBuilder();
-        char[] ch = word.toCharArray();
-        buff.append("*".repeat(ch.length));
-        return buff.toString();
+        final StringBuilder builder = new StringBuilder();
+        final char[] ch = word.toCharArray();
+        builder.append("*".repeat(ch.length));
+        return builder.toString();
     }
 }
